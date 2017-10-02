@@ -4,6 +4,8 @@ Drooper is going to be a device that has a drum machine and a looper, that you c
 
 ## There is not much more here yet... rest is template
 
+![Image of the interface](./Interface.png?raw=true "The Interface")
+
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
