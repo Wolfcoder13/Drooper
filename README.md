@@ -1,7 +1,4 @@
 # Drooper
-Drooper - drum machine &amp; Looper
-
-# Drooper
 
 Drooper is going to be a device that has a drum machine and a looper, that you can make music with
 
