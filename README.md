@@ -14,10 +14,10 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+You will need to install : https://github.com/adafruit/Adafruit_Python_MCP3008
 
 ```
-Give examples
+sudo pip install adafruit-mcp3008
 ```
 
 ### Installing
