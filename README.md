@@ -2,9 +2,13 @@
 
 Drooper is going to be a device that has a drum machine and a looper, that you can make music with
 
-## There is not much more here yet... rest is template
+## How the device will look
 
 ![Image of the interface](./Interface.png?raw=true "The Interface")
+
+## The circuit diagram for our 4x4 drum machine. This is before anything else has been made so, the pins on the raspberry pi havent been expanded.
+
+![Circuit schematic for 4x4 pads](./4x4Connection_schem.jpg?raw=true "The Interface")
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
