@@ -5,7 +5,7 @@ Drooper - drum machine &amp; Looper
 
 Drooper is going to be a device that has a drum machine and a looper, that you can make music with
 
-## There is not much more here yet
+## There is not much more here yet... rest is template
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
