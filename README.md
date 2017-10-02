@@ -1,6 +1,6 @@
 # Drooper
 
-Drooper is going to be a device that has a drum machine and a looper, that you can make music with
+Drooper is going to be a device that has a drum machine and a looper, that you can make music with. We will use Raspberry pi as our microcontroller. It will take input from various sensors, such as knobs and force sensitive resistors. These sensors will control volume and pan, audio effects, control digital interface on DLC screen. It will be possible to record audio as well. The device will detect the BPM (beats per minute) of the first recorded clip so it can clip all audio clips with great detail. When it comes to music, precision is very important regarding timing.
 
 ## How the device will look
 
