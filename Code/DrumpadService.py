@@ -13,23 +13,23 @@ class DrumpadService(object):
 	#TODO: See if we should make this into a singleton class.
 
 	def __init__(self):
-	# TODO: need to verify these are the right numbers for the pins.
-	# Software SPI configuration:
-	self.CLK  = 18
-	self.MISO = 23
-	self.MOSI = 24
-	self.CS   = 25
-	self.CS2  = 26	#check this pin
-	self.mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
-	#make sure this works as second input
-	self.mcp2 = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS2, miso=MISO, mosi=MOSI)
-	
-	self.listOfDrums = []
+		# TODO: need to verify these are the right numbers for the pins.
+		# Software SPI configuration:
+		self.CLK  = 18
+		self.MISO = 23
+		self.MOSI = 24
+		self.CS   = 25
+		self.CS2  = 26	#check this pin
+		self.mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
+		#make sure this works as second input
+		self.mcp2 = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS2, miso=MISO, mosi=MOSI)
+		
+		self.listOfDrums = []
 
-	# Hardware SPI configuration:
-	# SPI_PORT   = 0
-	# SPI_DEVICE = 0
-	# mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
+		# Hardware SPI configuration:
+		# SPI_PORT   = 0
+		# SPI_DEVICE = 0
+		# mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 
 	# TODO: initialize drum sounds
 	def initalizeDrums (self):
