@@ -10,7 +10,7 @@ class DrumButton(object):
 		#path is a string that holds the path to the sound, such as "path/to/sound1.wav" """
 		self.sound = AudioSegment.from_file(path)
 		
-	def playSound(volume):
+	def playSound(self, volume):
 		#""" This will play the sound that is stored on this button
 		#volume: is a variable that will control how loudly the sound will be played."""
 		#converted_volume = *0.3(-100+volume)

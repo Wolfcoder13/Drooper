@@ -26,9 +26,8 @@ class DrumpadService(object):
 		
 		self.drums = "Drums_1"
 		
-		self.listOfDrums = []
+		self.listOfDrums = [0]*16
 		self.initalizeDrums()
-		self.prototype()
 
 	# TODO: initialize drum sounds
 	def initalizeDrums (self):
@@ -42,7 +41,8 @@ class DrumpadService(object):
 		#change drum folder, and load new sounds.
 
 	def playButton (self,buttonNr, volume):
-		self.listOfDrums[buttonNr].playSound(volume)
+		button = self.listOfDrums[buttonNr]
+		button.playSound(volume)
 
 	def getVolume (self,input):
 		#calculates the volume from 10 bit input resolution (1023 values)
@@ -67,8 +67,8 @@ def main():
 	service = DrumpadService()
 	while True:
 		for i in range(8):
-			volume = getVolume(service.mcp.read_adc(i))
-			volume2 = getVolume(service.mcp2.read_adc(i))
+			volume = service.getVolume(service.mcp.read_adc(i))
+			volume2 = service.getVolume(service.mcp2.read_adc(i))
 			if volume != 0:
 				service.playButton(i, volume)
 			if volume2 != 0:
