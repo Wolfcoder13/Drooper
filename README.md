@@ -16,10 +16,12 @@ These instructions will get you a copy of the project up and running on your loc
 
 You will need to install : https://github.com/adafruit/Adafruit_Python_MCP3008
 libav-tools is neccesary to be able to use pydub on raspbian
+It is neccesary to install pyaudio correctly.
 
 ```
 sudo pip install adafruit-mcp3008
 sudo pip install pydub
+sudo pip install pyaudio
 sudo apt-get install libav-tools
 ```
 

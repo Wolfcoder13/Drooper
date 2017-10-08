@@ -24,7 +24,7 @@ class DrumpadService(object):
 		#make sure this works as second input
 		self.mcp2 = Adafruit_MCP3008.MCP3008(clk=self.CLK, cs=self.CS2, miso=self.MISO, mosi=self.MOSI)
 		
-		self.drums = "Drums_1"
+		self.drums = "Drums_0"
 		
 		self.listOfDrums = [0]*16
 		self.initalizeDrums()
@@ -33,7 +33,8 @@ class DrumpadService(object):
 	def initalizeDrums (self):
 		#perhaps keep sounds in array
 		for i in range(16):
-			self.listOfDrums[i] = DrumButton("../Sounds/"+self.drums+"/sound"+str(i)+".wav")
+			#self.listOfDrums[i] = DrumButton("../Sounds/"+self.drums+"/sound"+str(i)+".wav")
+			self.listOfDrums[i] = DrumButton("../Sounds/Drums_1/sound0.wav")
 		
 		
 	#def changeDrums (self,pick):
@@ -75,7 +76,6 @@ def main():
 				service.playButton(i+8, volume2)
 
 		# Pause for half a second.
-		print('lala')
 		time.sleep(0.01)
 		
 if __name__ == '__main__':main()
