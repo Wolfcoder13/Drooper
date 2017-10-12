@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import time
+from time import gmtime, strftime
+from threading import Thread
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 
@@ -33,8 +35,8 @@ class DrumpadService(object):
 	def initalizeDrums (self):
 		#perhaps keep sounds in array
 		for i in range(16):
-			#self.listOfDrums[i] = DrumButton("../Sounds/"+self.drums+"/sound"+str(i)+".wav")
-			self.listOfDrums[i] = DrumButton("../Sounds/Drums_1/sound0.wav")
+			self.listOfDrums[i] = DrumButton("../Sounds/"+self.drums+"/sound"+str(i)+".wav")
+			#self.listOfDrums[i] = DrumButton("../Sounds/Drums_0/sound0.wav")
 		
 		
 	#def changeDrums (self,pick):
@@ -43,7 +45,12 @@ class DrumpadService(object):
 
 	def playButton (self,buttonNr, volume):
 		button = self.listOfDrums[buttonNr]
-		button.playSound(volume)
+		if volume == 0:
+			button.playing=False
+		elif button.playing == False :
+			button.playing = True
+			t = Thread(target = button.playSound, args=(volume,))
+			t.start()
 
 	def getVolume (self,input):
 		#calculates the volume from 10 bit input resolution (1023 values)
@@ -68,14 +75,17 @@ def main():
 	service = DrumpadService()
 	while True:
 		for i in range(8):
-			volume = service.getVolume(service.mcp.read_adc(i))
-			volume2 = service.getVolume(service.mcp2.read_adc(i))
-			if volume != 0:
-				service.playButton(i, volume)
-			if volume2 != 0:
-				service.playButton(i+8, volume2)
+			value = service.mcp.read_adc(i)
+			#print(str(value))
+			volume = service.getVolume(value)
+			service.playButton(i, volume)
+			
+			value = service.mcp2.read_adc(i)
+			#print(str(value))
+			volume2 = service.getVolume(value)
+			service.playButton(i+8, volume2)
 
-		# Pause for half a second.
-		time.sleep(0.01)
+		# Pause for some time
+		time.sleep(0.05)
 		
 if __name__ == '__main__':main()
