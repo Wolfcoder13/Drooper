@@ -25,6 +25,31 @@ sudo pip install pyaudio
 sudo apt-get install libav-tools
 ```
 
+### Setup USB sound driver
+
+type in sudo nano /usr/share/alsa/alsa.conf , scroll down and find these lines
+```
+defaults.ctl.card 0
+defaults.pcm.card 0
+```
+and change them into 
+```
+defaults.ctl.card 0
+defaults.pcm.card 0
+```
+Then type in sudo nano ~/.asoundrc and change it so it reads
+```
+pcm.!default {
+    type hw
+    card 1
+}
+
+ctl.!default {
+    type hw
+    card 1
+}
+```
+
 ### Installing
 
 A step by step series of examples that tell you have to get a development env running
