@@ -27,7 +27,7 @@ sudo apt-get install libav-tools
 
 ### Setup USB sound driver
 
-type in sudo nano /usr/share/alsa/alsa.conf , scroll down and find these lines
+type in sudo nano ``/usr/share/alsa/alsa.conf`` , scroll down and find these lines
 ```
 defaults.ctl.card 0
 defaults.pcm.card 0
