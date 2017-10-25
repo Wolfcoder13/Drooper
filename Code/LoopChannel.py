@@ -2,6 +2,8 @@ import pyaudio
 import wave
 
 class LoopChannel:
+
+	CHUNK = 1024
 	
 	def __init__(self):
 		# This might be a different sound wrapper, but will be used for testing purposes
@@ -10,7 +12,7 @@ class LoopChannel:
 		self.playing = False
 	
 		#this will contain the audio file that needs to be played
-		self.loop = None
+		self.loop = True
 		
 		#Volume is between 0 and 127
 		self.volume = 0
@@ -21,11 +23,12 @@ class LoopChannel:
 	def playLoop(self):
 		CHUNK = 1024
 		#wf = self.wave
-		wf = wave.open('output.wav', 'rb')
+		wf = wave.open('looptest.wav', 'rb')
 		while(True):
-
+	
+			print("="*40)
 			p = pyaudio.PyAudio()
-
+			print("="*40)
 			stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
 							channels=wf.getnchannels(),
 							rate=wf.getframerate(),
@@ -33,10 +36,12 @@ class LoopChannel:
 
 			data = wf.readframes(CHUNK)
 
-			while data != '':
-				if(self.playing):
-					stream.write(data)
-				data = wf.readframes(CHUNK)
+			while self.loop :
+				stream.write(data)
+				data = wf.readframes(self.CHUNK)
+				if data == '' : # If file is over then rewind.
+					wf.rewind()
+					data = wf.readframes(self.CHUNK)
 
 			stream.stop_stream()
 			stream.close()
