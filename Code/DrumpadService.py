@@ -21,7 +21,7 @@ class DrumpadService(object):
 		self.MISO = 23   #pin 16
 		self.MOSI = 24   #pin 18
 		self.CS   = 25   #pin 22
-		self.CS2  = 7	#pin 24 
+		self.CS2  = 7	#pin 26 
 		self.mcp = Adafruit_MCP3008.MCP3008(clk=self.CLK, cs=self.CS, miso=self.MISO, mosi=self.MOSI)
 		#make sure this works as second input
 		self.mcp2 = Adafruit_MCP3008.MCP3008(clk=self.CLK, cs=self.CS2, miso=self.MISO, mosi=self.MOSI)
