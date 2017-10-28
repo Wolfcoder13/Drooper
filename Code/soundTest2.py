@@ -6,12 +6,12 @@ import sys
 
 chunk = 1024
 
-if len(sys.argv) < 2:
-    print "Plays a wave file.\n\n" +\
-          "Usage: %s filename.wav" % sys.argv[0]
-    sys.exit(-1)
+# if len(sys.argv) < 2:
+    # print("Plays a wave file.\n\n" +\
+          # "Usage: %s filename.wav" % sys.argv[0])
+    # sys.exit(-1)
 
-wf = wave.open("../Sounds/Drums_0/sound0.wav", 'rb')
+wf = wave.open("drums.wav", 'rb')
 
 p = pyaudio.PyAudio()
 

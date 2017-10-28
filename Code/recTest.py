@@ -36,3 +36,33 @@ wf.setsampwidth(p.get_sample_size(FORMAT))
 wf.setframerate(RATE)
 wf.writeframes(b''.join(frames))
 wf.close()
+
+wf = wave.open(WAVE_OUTPUT_FILENAME, 'rb')
+
+
+p = pyaudio.PyAudio()
+
+
+stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+				channels=wf.getnchannels(),
+				rate=wf.getframerate(),
+				output=True)
+
+data = wf.readframes(CHUNK)
+
+loop = True
+
+while loop :
+	stream.write(data)
+	data = wf.readframes(CHUNK)
+	print(data)
+	if data == '' : # If file is over then rewind.
+		print("do we enter?")
+		print(data)
+		wf.rewind()
+		data = wf.readframes(CHUNK)
+
+stream.stop_stream()
+stream.close()
+
+p.terminate()
