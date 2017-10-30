@@ -34,10 +34,9 @@ GPIO.setup(LOOPBUTTON3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 class LoopService:
 	def __init__(self):
 		#loopLength will be used to make sure all loop clips are of the same length
-		self.loopLength = 0
+		self.loopLength = None
 		self.bpmSet = False
 		self.bpm = 0
-		self.startSong = False
 		self.numberOfLoopChannels = 3
 		self.listOfLoopChannels = [0]*self.numberOfLoopChannels
 		self.recordChannel = RecordChannel()
@@ -50,15 +49,14 @@ class LoopService:
 		
 		#for testing
 		#self.playLoop()
-		
-		# self.listOfLoopChannels[0].setWave('drums.wav')
+		self.listOfLoopChannels[0].setWave('drums.wav')
 		# self.listOfLoopChannels[0].switchLoop()
-		# self.listOfLoopChannels[1].setWave('lead.wav')
-		# self.listOfLoopChannels[1].switchLoop()
-		# self.listOfLoopChannels[2].setWave('pads.wav')
-		# self.listOfLoopChannels[2].switchLoop()
+		self.listOfLoopChannels[1].setWave('lead.wav')
+		self.listOfLoopChannels[1].switchLoop()
+		self.listOfLoopChannels[2].setWave('pads.wav')
+		self.listOfLoopChannels[2].switchLoop()
 		self.loop = True
-		# self.playMixed()
+		self.playMixed()
 		
 		
 		
@@ -71,44 +69,27 @@ class LoopService:
 	def initializeButtons(self):
 		print("Initializing Interups for buttons")
 		GPIO.add_event_detect(RECBUTTON,   GPIO.FALLING, callback=lambda x: self.record(),      bouncetime=300)
-		GPIO.add_event_detect(LOOPBUTTON1, GPIO.FALLING, callback=lambda x: self.loopButton(0), bouncetime=300)
-		GPIO.add_event_detect(LOOPBUTTON2, GPIO.FALLING, callback=lambda x: self.loopButton(1), bouncetime=300)
-		GPIO.add_event_detect(LOOPBUTTON3, GPIO.FALLING, callback=lambda x: self.loopButton(2), bouncetime=300)
+		GPIO.add_event_detect(LOOPBUTTON1, GPIO.FALLING, callback=lambda x: self.loopButton(0), bouncetime=500)
+		GPIO.add_event_detect(LOOPBUTTON2, GPIO.FALLING, callback=lambda x: self.loopButton(1), bouncetime=500)
+		GPIO.add_event_detect(LOOPBUTTON3, GPIO.FALLING, callback=lambda x: self.loopButton(2), bouncetime=500)
 		
 
 	def record(self):
-		self.recordChannel.switchRecord()
-		# if self.recordChannel.isRecording():
-			# print("Recording")
-		# else:
-			# print("stop recording")
+		self.record = not self.record
+		if self.recordChannel.record:
+			print("Recording")
+		else:
+			print("stop recording")
 			
 		
 	#this might make one mixed chunk louder or more quiet. Debug it later if necessary
 	def loopButton(self, index):
-		# print("You pressed loop button " + str(index))
-		if not self.startSong:
-			# I think this part is fully implemented
+		print("You pressed loop button " + str(index))
+		if self.record:
+			print("implement recording function")
 			self.recordChannel.firstRecording()
 			self.listOfLoopChannels[index].setWave("record.wav")
-			self.listOfLoopChannels[index].setFrameCount(self.recordChannel.getFrameCount)
-			# print(str(self.recordChannel.getFrameCount()))
-			self.loopLength = self.recordChannel.getFrameCount()
 			self.listOfLoopChannels[index].switchLoop()
-			self.startSong = True
-		elif self.recordChannel.isRecording():
-			if self.listOfLoopChannels[index].getFrameCount() == 0:
-				#here we havent recorded anything on this channel
-				self.recordChannel.recordr(index)
-				self.listOfLoopChannels[index].setWave("record"+str(index)+".wav")
-				self.listOfLoopChannels[index].switchLoop()
-				self.listOfLoopChannels[index].setFrameCount(self.recordChannel.getCurrentFrameCount())
-				if self.loopLength < self.recordChannel.getCurrentFrameCount():
-					self.loopLength = self.recordChannel.getCurrentFrameCount()
-				# print(str(self.recordChannel.getCurrentFrameCount()))
-			else:
-				#Here we have recorded something on this channel, and would like to record something on top of that
-				print("implement a way to combine new loop with current loop")
 		else:
 			self.listOfLoopChannels[index].switchLoop()
 			
@@ -135,7 +116,9 @@ class LoopService:
 			constant = 0.0
 		else:
 			constant= 1.0/self.findNrOfChannelsOn()
-		combinedData = numpy.zeros(2*CHUNK, dtype=numpy.int16)
+		print(str(constant))
+		print(str(self.findNrOfChannelsOn()))
+		combinedData = 0
 		
 		for i in range(self.numberOfLoopChannels):
 			data[i] = self.listOfLoopChannels[i].readChunk(CHUNK)
@@ -143,14 +126,10 @@ class LoopService:
 			
 			#Only combine audio from channels that are on.
 			if self.listOfLoopChannels[i].loop:
-				if decodedData[i] != []:
-					combinedData = combinedData + self.listOfLoopChannels[i].getVolume() * constant * decodedData[i]
-				else:
-					combinedData = combinedData + numpy.zeros(2*CHUNK, dtype=numpy.int16)
+				combinedData = combinedData + constant* decodedData[i]
+			print(str(combinedData))
 			
 		newData = combinedData.astype(numpy.int16)
-		if numpy.array_equal(newData, numpy.zeros(2*CHUNK, dtype=numpy.int16)):
-			return numpy.zeros(0, dtype=numpy.int16).astype(numpy.int16)
 		return newData
 	
 	# Rewinds all the wave files in our loop channels
@@ -170,22 +149,19 @@ class LoopService:
 		while self.loop :			
 			stream.write(data)
 			data = self.mixChannels().tostring()
-			# print(data)
 			if data == b'' : # If file is over then rewind.
-				# print("rewind")
 				self.rewindChannels()
 				data = self.mixChannels().tostring()
 		
 		
 # TODO: see if its possible to use interrupt, instead of constant polling of 
 # Drumpad loop. Should be run asynchronously
-def main(): 
+def main():
+	# GPIO.setup(RECBUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)  
+	# GPIO.setup(LOOPBUTTON1, GPIO.IN, pull_up_down=GPIO.PUD_UP)  
+	# GPIO.setup(LOOPBUTTON2, GPIO.IN, pull_up_down=GPIO.PUD_UP)  
+	# GPIO.setup(LOOPBUTTON3, GPIO.IN, pull_up_down=GPIO.PUD_UP) 
 	ls = LoopService()
-	while(not ls.startSong):
-		# print("waiting")
-		pass
-	print("we made it here")
-	ls.playMixed()
 
 		
 if __name__ == '__main__':main()

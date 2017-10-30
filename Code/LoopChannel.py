@@ -8,15 +8,33 @@ class LoopChannel:
 	def __init__(self):
 		# This might be a different sound wrapper, but will be used for testing purposes
 		self.wave = wave.open('looptest.wav', 'rb')
+		
+		# PERHAPS RETHINK THIS VARIABLE... BUT WE NEED RECORDING TO FOLLOW
+		self.emtpyWave = None
+	
+		# its the number of frames this loop has. 
+		self.frameCount = 0
 	
 		#this says if current channel is looping or not
 		self.loop = False
 		
-		#Volume is between 0 and 127
-		self.volume = 0
+		#Volume is between 0 and 1.27
+		self.volume = 1.25
 		
 		#Pan is between -63 and 64
 		self.pan = 0
+		
+	def isLooping(self):
+		return self.loop
+		
+	def setFrameCount(self, frameCount):
+		self.frameCount = frameCount
+		
+	def getFrameCount(self):
+		return self.frameCount
+		
+	def getVolume(self):
+		return self.volume
 		
 	#switches the boolean value of loop.	
 	def switchLoop(self):
@@ -30,12 +48,10 @@ class LoopChannel:
 	
 	def readChunk(self, CHUNK):
 		chunk = self.wave.readframes(CHUNK)
-		if len(chunk) < 10:
-			print(chunk)
-		if chunk == "''" : # If file is over then rewind.
+		if chunk == '' : # If file is over then rewind.
 			# print("chunk empty")
-			wf.rewind()
-			chunk = wf.readframes(self.CHUNK) 
+			self.wave.rewind()
+			chunk = self.wave.readframes(self.CHUNK) 
 		return chunk
 		
 	def playLoop(self):
