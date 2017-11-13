@@ -19,9 +19,9 @@ class LoopChannel:
 		self.loop = False
 		
 		#Volume is between 0 and 1.27
-		self.volume = 1.25
+		self.volume = 0.5
 		
-		#Pan is between -63 and 64
+		#Pan is between -45 and 45
 		self.pan = 0
 		
 	def isLooping(self):
@@ -35,6 +35,15 @@ class LoopChannel:
 		
 	def getVolume(self):
 		return self.volume
+		
+	def setVolume(self, volume):
+		self.volume = volume
+		
+	def getPan(self):
+		return self.pan
+		
+	def setPan(self, pan):
+		self.pan = pan	
 		
 	#switches the boolean value of loop.	
 	def switchLoop(self):
@@ -73,7 +82,7 @@ class LoopChannel:
 				stream.write(data)
 				data = wf.readframes(self.CHUNK)
 				if data == '' : # If file is over then rewind.
-					print("do we enter?")
+					# print("do we enter?")
 					wf.rewind()
 					data = wf.readframes(self.CHUNK)
 
