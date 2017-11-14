@@ -156,22 +156,8 @@ class LoopService:
 	def applyPan(self, npData, pan):
 		if npData == []:
 			return []
-		
-		#this is to slow :(
-		for x in range(0,2*CHUNK,2):
-			npData[x]   *= numpy.sqrt(2)/2.0 * (numpy.cos(pan/180+math.pi) - numpy.sin(pan/180+math.pi))
-			npData[x+1] *= numpy.sqrt(2)/2.0 * (numpy.cos(pan/180+math.pi) + numpy.sin(pan/180+math.pi))
-			
-		# left = range(0, 2*CHUNK-1, 2)
-		# right = range(1, 2*CHUNK-1, 2)
-		# print the original array
-		
-		# npData[left] *= numpy.sqrt(2)/2.0 * (numpy.cos(numpy.radians(pan)) - numpy.sin(numpy.radians(pan)))
-		# npData[right] *= numpy.sqrt(2)/2.0 * (numpy.cos(numpy.radians(pan)) + numpy.sin(numpy.radians(pan)))
-		# print("frame")
-		# for x in range (0, 2*CHUNK, 2):
-			# print(str(npData[x]) + ", " + str(npData[x+1]))
-
+		npData[0::2] *= numpy.sqrt(2)/2.0 * (numpy.cos(numpy.radians(pan)) - numpy.sin(numpy.radians(pan)))
+		npData[1::2] *= numpy.sqrt(2)/2.0 * (numpy.cos(numpy.radians(pan)) + numpy.sin(numpy.radians(pan)))
 		return npData
 		
 	

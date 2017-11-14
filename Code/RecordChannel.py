@@ -51,15 +51,18 @@ class RecordChannel:
 		self.currentFrameCount = 0
 		while(self.record):
 			for i in range(self.frameCount):
-				if(self.record):
-					data = stream.read(CHUNK)
-				else:
-					if self.frameCount%self.currentFrameCount == 0 or self.frameCount == self.currentFrameCount*2 or self.frameCount == self.currentFrameCount*4 or self.frameCount == self.currentFrameCount*8:
-						# print("break me")
-						break
-					data = numpy.zeros(2*CHUNK, dtype=numpy.int16).tostring()
-				frames.append(data) # 2 bytes(16 bits) per channel
-				self.currentFrameCount += 1
+				try:
+					if(self.record):
+						data = stream.read(CHUNK)
+					else:
+						if self.frameCount%self.currentFrameCount == 0 or self.frameCount == self.currentFrameCount*2 or self.frameCount == self.currentFrameCount*4 or self.frameCount == self.currentFrameCount*8:
+							# print("break me")
+							break
+						data = numpy.zeros(2*CHUNK, dtype=numpy.int16).tostring()
+					frames.append(data) # 2 bytes(16 bits) per channel
+					self.currentFrameCount += 1
+				except:
+					logging.debug('EXCEPTION')
 			else:
 				continue
 			break
@@ -84,21 +87,15 @@ class RecordChannel:
 						channels=CHANNELS,
 						rate=RATE,
 						input=True,
-						output=True,
+						# output=True,
 						frames_per_buffer=CHUNK) #buffer
 						
-		output = p.open(format=FORMAT,
-							channels=CHANNELS,
-							rate=RATE,
-							output=True)
 						
 		#print("* recording")
 		frames = []
 		while(self.record):
 			try:
 				data = stream.read(CHUNK)
-				stream.write(data)
-				# output.write(data)
 				frames.append(data) # 2 bytes(16 bits) per channel
 				self.frameCount += 1
 				# logging.debug('works')
