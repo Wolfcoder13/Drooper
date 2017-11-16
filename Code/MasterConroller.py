@@ -37,7 +37,10 @@ class MasterController:
 		self.initializeSongList(self.SONGPATH)
 		self.initializeMenuList()
 		
-		
+		self.BACK_BUTTON    = 1
+		self.SELECT_BUTTON  = 1
+		self.UP_BUTTON      = 1
+		self.DOWN_BUTTON    = 1
 		self.initializeScreenButtons()
 		
 	def initializeDrumList(self, path):
@@ -65,20 +68,26 @@ class MasterController:
 	#TODO
 	def up(self):
 		if(self.listPicked == 0):
-			pass
+			self.menuListIndex = (self.menuListIndex -1)%self.menuList.length
+			# display updated menu list on screen
 		elif(self.listPicked == 1):
-			pass
+			self.drumListIndex = (self.drumListIndex -1)%self.drumList.length
+			# display updated drum list on screen
 		elif(seef.listPicked == 2):
-			pass
+			self.songListIndex = (self.songListIndex -1)%self.songList.length
+			# display updated song list on screen
 		
 	#TODO
 	def down(self):
 		if(self.listPicked == 0):
-			pass
+			self.menuListIndex = (self.menuListIndex +1)%self.menuList.length
+			# display updated menu list on screen
 		elif(self.listPicked == 1):
-			pass
+			self.drumListIndex = (self.drumListIndex +1)%self.drumList.length
+			# display updated drum list on screen
 		elif(seef.listPicked == 2):
-			pass
+			self.songListIndex = (self.songListIndex +1)%self.songList.length
+			# display updated song list on screen
 			
 	#TODO
 	def select(self):
@@ -95,8 +104,11 @@ class MasterController:
 				# display screen that new song is read
 				# display menuList again after some time
 		elif(self.listPicked == 1):
+			self.drumpadService.changeDrums(self.drumListIndex)
+			# Display "drums X picked"
 			pass
 		elif(slef.listPicked == 2):
+			# Display "no sounds available at this moment"
 			pass
 			
 	#TODO
@@ -109,6 +121,8 @@ class MasterController:
 			
 	#TODO
 	def resetLoopService(self):
+		self.loopService = None
+		self.loopService = LoopService()
 		pass
 	
 	#TODO
