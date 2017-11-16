@@ -1,5 +1,8 @@
 import pyaudio
 import wave
+from pydub import AudioSegment
+import numpy
+
 
 class LoopChannel:
 
@@ -7,10 +10,12 @@ class LoopChannel:
 	
 	def __init__(self):
 		# This might be a different sound wrapper, but will be used for testing purposes
+		self.path = ""
+		
 		self.wave = wave.open('looptest.wav', 'rb')
 		
 		# PERHAPS RETHINK THIS VARIABLE... BUT WE NEED RECORDING TO FOLLOW
-		self.emtpyWave = None
+		self.emtpyWave = True
 	
 		# its the number of frames this loop has. 
 		self.frameCount = 0
@@ -19,10 +24,19 @@ class LoopChannel:
 		self.loop = False
 		
 		#Volume is between 0 and 1.27
-		self.volume = 0.5
+		self.volume = 1
 		
 		#Pan is between -45 and 45
 		self.pan = 0
+		
+	def setFramePosition(self, frameNumber, CHUNK):
+		self.rewindWave()             
+
+		# Set the new position to frameNumber-th frame           
+		self.wave.setpos(self.wave.tell() + frameNumber * CHUNK)
+		
+	def isEmptyWave(self):
+		return self.emptyWave
 		
 	def isLooping(self):
 		return self.loop
@@ -51,6 +65,13 @@ class LoopChannel:
 		
 	def setWave(self, path):
 		self.wave = wave.open(path, 'rb')
+		self.path = path
+		self.emptyWave = False
+		
+	def combineToCurrent(self, path):
+		#combine path to self.path
+		
+		pass
 		
 	def rewindWave(self):
 		self.wave.rewind()
@@ -93,3 +114,6 @@ class LoopChannel:
 			
 	#def loadSound(self, path):
 		#Load sound from specific file architecture.
+		
+	#def saveSound(self, path):
+		#Save sound to a specific file in the file system architecture.

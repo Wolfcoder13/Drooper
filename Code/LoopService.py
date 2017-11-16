@@ -6,6 +6,8 @@ import threading
 import time
 import logging
 import math
+import os
+import sys
 
 
 import Adafruit_GPIO.SPI as SPI
@@ -14,6 +16,8 @@ import Adafruit_MCP3008
 from LoopChannel import LoopChannel
 from RecordChannel import RecordChannel
 from functools import reduce
+
+# os.close(sys.stderr.fileno())
 
 logging.basicConfig(level=logging.DEBUG,
                     format='(%(threadName)-10s) %(message)s',
@@ -49,9 +53,12 @@ class LoopService:
 								   self.LOOPBUTTON4, self.LOOPBUTTON5]
 		
 		# loopLength will be used to make sure all loop clips are of the same length or merge-able length
+		# It has the length of the longest loop out of all the channels
 		self.loopLength = 0
-		self.bpmSet = False
-		self.bpm = 0
+		
+		# current frame position with respect to loop length and mix play
+		self.currentFramePosition = 0
+		
 		self.startSong = False
 		self.numberOfLoopChannels = 3
 		self.listOfLoopChannels = [0]*self.numberOfLoopChannels
@@ -125,8 +132,13 @@ class LoopService:
 		elif self.recordChannel.isRecording():
 			if self.listOfLoopChannels[index].getFrameCount() == 0:
 				#here we havent recorded anything on this channel
+				logging.debug('IF1')
 				self.recordChannel.recordr(index)
 				self.listOfLoopChannels[index].setWave("record"+str(index)+".wav")
+				#currently in testing, trying to synchronize different recordings
+				self.listOfLoopChannels[index].setFramePosition(self.currentFramePosition, CHUNK)
+				
+				
 				self.listOfLoopChannels[index].switchLoop()
 				self.listOfLoopChannels[index].setFrameCount(self.recordChannel.getCurrentFrameCount())
 				if self.loopLength < self.recordChannel.getCurrentFrameCount():
@@ -134,10 +146,18 @@ class LoopService:
 				# print(str(self.recordChannel.getCurrentFrameCount()))
 			else:
 				#Here we have recorded something on this channel, and would like to record something on top of that
+				logging.debug('IF2')
+				self.recordChannel.recordr(str(index)+"a")
+				self.listOfLoopChannels[index].combineToCurrent("record"+str(index)+"a"+".wav")
 				pass
 				
 		else:
 			self.listOfLoopChannels[index].switchLoop()
+			
+	def upCurrentFramePosition(self):
+
+		# current frame position with respect to loop length and mix play
+		self.currentFramePosition = (self.currentFramePosition+1)%self.loopLength
 			
 	def playLoop(self):
 		# This will is just for testing purposes, We will need to mix our loopChannels into one audio.
@@ -169,7 +189,7 @@ class LoopService:
 		if nrC == 0:
 			constant = 0.0
 		else:
-			constant= 1.0/self.findNrOfChannelsOn()
+			constant= 1.0/nrC
 		combinedData = numpy.zeros(2*CHUNK, dtype=numpy.int16)
 		
 		for i in range(self.numberOfLoopChannels):
@@ -193,8 +213,10 @@ class LoopService:
 	
 	# Rewinds all the wave files in our loop channels
 	def rewindChannels(self):
+		self.recordChannel.setCurrentFramePosition(0)
 		for i in range(self.numberOfLoopChannels):
 			self.listOfLoopChannels[i].rewindWave()
+		logging.debug('do we rewind')
 	
 	# plays all loops that are turned on in our loop channels.
 	def playMixed(self):
@@ -207,10 +229,14 @@ class LoopService:
 		data = self.mixChannels().tostring()
 		while self.loop :			
 			stream.write(data)
+			self.upCurrentFramePosition()
+			self.recordChannel.upCurrentFramePosition()
+			# logging.debug(str(self.currentFramePosition))	
+			# logging.debug(str(self.recordChannel.getCurrentFramePosition()))	
 			data = self.mixChannels().tostring()
-			if data == b'' : # If file is over then rewind.
-				self.rewindChannels()
-				data = self.mixChannels().tostring()
+			# if data == b'' : # If file is over then rewind.
+				# self.rewindChannels()
+				# data = self.mixChannels().tostring()
 				
 	# gathers input for volume and pan for each channel
 	def gatherInput(self):
@@ -224,7 +250,7 @@ class LoopService:
 				# pan_value = self.mcp2.read_adc(i)
 				# self.listOfLoopChannels[i].setPan(pan_value)
 			value = self.mcp.read_adc(0)
-			self.listOfLoopChannels[0].setVolume(value/1024)
+			self.listOfLoopChannels[0].setVolume(value/1024*1.25)
 			# logging.debug('Volume: ' + str(value/1024))
 			
 			value = self.mcp.read_adc(1)
@@ -233,25 +259,13 @@ class LoopService:
 			# logging.debug('pan: ' + str(value/1024*90-45))
 			# self.listOfLoopChannels[0].setPan(self.mcp.read_adc(1))
 			
-			#busy waiting style for buttons
-			# input_state = GPIO.input(self.RECBUTTON)
-			# if input_state == False:
-				# self.record()
-				# logging.debug('record Button Pressed')
-			# for i in range(self.numberOfLoopChannels):
-				# input_state = GPIO.input(self.listOfLoopButtonId[i])
-				# if input_state == False:
-					# # self.loopButton(i)
-					# t1 = threading.Thread(target=self.loopButton, args=(i,))
-					# t1.start()
-					# logging.debug('loop button ' + str(i) + ' was pressed')
 			time.sleep(0.1)
 			
 
 
 def main(): 
 	ls = LoopService()
-	# We dont have to worry about race conditions. so just run that dive motherf***er
+	# We dont have to worry about race conditions. so just run that dive motherf*... SHUT YOUR MOUTH!... im just talking about Shaft.
 	t1 = threading.Thread(target=ls.gatherInput)
 	t1.start()
 	# ls.run()

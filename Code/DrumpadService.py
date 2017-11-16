@@ -35,8 +35,11 @@ class DrumpadService(object):
 	def initalizeDrums (self):
 		#perhaps keep sounds in array
 		for i in range(16):
-			self.listOfDrums[i] = DrumButton("../Sounds/"+self.drums+"/sound"+str(i)+".wav")
-			#self.listOfDrums[i] = DrumButton("../Sounds/Drums_0/sound0.wav")
+			self.listOfDrums[i] = DrumButton("../Sounds/Drums/"+self.drums+"/sound"+str(i)+".wav")
+			
+	def changeDrums (self, Nr):
+		self.drums = "Drums_"+str(Nr)
+		self.initalizeDrums()
 		
 		
 	#def changeDrums (self,pick):

@@ -1,0 +1,14 @@
+
+
+
+
+# notkun: DisplayList(list, index)
+# Fyrir:  list er listi af strengjum
+#		  index er heiltala
+# Eftir:  Sýnt er lista af 4 eða 5 strengjum í list, þar sem
+#		  strengur númer index er highlightaður.
+
+
+# notkun: showSuccess(text)
+# Fyrir:  text er strengur
+# Eftir:  Sýnt er textann, ásamt mögulega checkmark sem gefur til kynna að eitthvað heppnaðist
