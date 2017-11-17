@@ -75,19 +75,19 @@ class DrumpadService(object):
 		
 	def mainDrum(self):
 		while True:
-		for i in range(8):
-			value = self.mcp.read_adc(i)
-			#print(str(value))
-			volume = self.getVolume(value)
-			self.playButton(i, volume)
-			
-			value = self.mcp2.read_adc(i)
-			#print(str(value))
-			volume2 = self.getVolume(value)
-			self.playButton(i+8, volume2)
+			for i in range(8):
+				value = self.mcp.read_adc(i)
+				#print(str(value))
+				volume = self.getVolume(value)
+				self.playButton(i, volume)
+				
+				value = self.mcp2.read_adc(i)
+				#print(str(value))
+				volume2 = self.getVolume(value)
+				self.playButton(i+8, volume2)
 
-		# Pause for some time
-		time.sleep(0.05)
+			# Pause for some time
+			time.sleep(0.05)
 		
 		
 

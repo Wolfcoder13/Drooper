@@ -13,8 +13,8 @@ import Adafruit_MCP3008
 CLK  = 18	# pin 12
 MISO = 23	# pin 16
 MOSI = 24	# pin 18
-CS   = 5 	# pin 29
-CS2  = 6 	# pin 31
+CS   = 25 	# pin 29
+CS2  = 7 	# pin 31
 mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 mcp2 = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS2, miso=MISO, mosi=MOSI)
 

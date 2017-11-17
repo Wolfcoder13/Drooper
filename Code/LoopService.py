@@ -60,7 +60,7 @@ class LoopService:
 		self.currentFramePosition = 0
 		
 		self.startSong = False
-		self.numberOfLoopChannels = 3
+		self.numberOfLoopChannels = 5
 		self.listOfLoopChannels = [0]*self.numberOfLoopChannels
 		self.recordChannel = RecordChannel()
 		self.initializeChannels()
@@ -104,6 +104,8 @@ class LoopService:
 		GPIO.add_event_detect(self.LOOPBUTTON1, GPIO.RISING, callback=lambda x: self.loopButton(0), bouncetime=300)
 		GPIO.add_event_detect(self.LOOPBUTTON2, GPIO.RISING, callback=lambda x: self.loopButton(1), bouncetime=300)
 		GPIO.add_event_detect(self.LOOPBUTTON3, GPIO.RISING, callback=lambda x: self.loopButton(2), bouncetime=300)
+		GPIO.add_event_detect(self.LOOPBUTTON4, GPIO.RISING, callback=lambda x: self.loopButton(3), bouncetime=300)
+		GPIO.add_event_detect(self.LOOPBUTTON5, GPIO.RISING, callback=lambda x: self.loopButton(4), bouncetime=300)
 		
 
 	# Simply flips a boolean value in recordChannel, which is used to determine whether or not to record or not when you press a channel button
@@ -242,24 +244,34 @@ class LoopService:
 	def gatherInput(self):
 		while(True):
 			#get volume and pan for each loop channel
-			# for i in range(self.numberOfLoopChannels):
-				# volume_value = self.mcp.read_adc(i)
-				# self.listOfLoopChannels[i].setVolume(volume_value)
+			for i in range(self.numberOfLoopChannels):
+				volume_value = self.mcp.read_adc(i)
+				self.listOfLoopChannels[i].setVolume(volume_value/1024*1.25)
 				
-				# pan_value = self.mcp2.read_adc(i)
-				# self.listOfLoopChannels[i].setPan(pan_value)
-			value = self.mcp.read_adc(0)
-			self.listOfLoopChannels[0].setVolume(value/1024*1.25)
+				pan_value = self.mcp2.read_adc(i)
+				self.listOfLoopChannels[i].setPan(pan_value/1024*90-45)
+			# value = self.mcp.read_adc(0)
+			# self.listOfLoopChannels[0].setVolume(value/1024*1.25)
 			# logging.debug('Volume: ' + str(value/1024))
 			
-			value = self.mcp.read_adc(1)
-			self.listOfLoopChannels[0].setPan(value/1024*90-45)
+			# value = self.mcp.read_adc(1)
+			# self.listOfLoopChannels[0].setPan(value/1024*90-45)
 			
 			# logging.debug('pan: ' + str(value/1024*90-45))
 			# self.listOfLoopChannels[0].setPan(self.mcp.read_adc(1))
 			
 			time.sleep(0.1)
 			
+	def main(self):
+		# We dont have to worry about race conditions. so just run that dive motherf*... SHUT YOUR MOUTH!... im just talking about Shaft.
+		t1 = threading.Thread(target=self.gatherInput)
+		t1.start()
+		# ls.run()
+		logging.debug('ready')
+		while(not self.startSong):
+			pass
+		logging.debug('we started the song')
+		self.playMixed()
 
 
 def main(): 

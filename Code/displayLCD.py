@@ -77,7 +77,7 @@ class DisplayLCD:
 			self.highlight = "bottom"
 		self.displayList(listTitle, listOfText, index)
 
-	def up(listTitle, listOfText, index):
+	def up(self, listTitle, listOfText, index):
 		if self.highlight == "bottom":
 			self.highlight = "middle"
 		else:
@@ -122,6 +122,6 @@ def main():
 if __name__ =="__main__":
     main()
 
-print('Press Ctrl-C to quit.')
-while True:
-    time.sleep(1.0)
+# print('Press Ctrl-C to quit.')
+# while True:
+    # time.sleep(1.0)
