@@ -84,6 +84,9 @@ def up(listTitle, listOfText, index):
     displayList(listTitle, listOfText, index)
 
 def showSuccess(text):
+
+    texti = text.split()
+
     # Clear display.
     disp.clear()
     disp.display()
@@ -103,17 +106,20 @@ def showSuccess(text):
 
 
     # Write some text.
-    draw.text((15,15), text, font=font)
+    draw.text((17,15), texti[0], font=font)
+    draw.text((17,25), texti[1], font=font)
 
     # Display image.
     disp.image(image)
     disp.display()
 
 
-# def main():
-#
-# if __name__ =="__main__":
-#     main()
+def main():
+    texti = input("Hvad viltu birta? ")
+    showSuccess(texti)
+
+if __name__ =="__main__":
+    main()
 
 print('Press Ctrl-C to quit.')
 while True:
