@@ -241,7 +241,6 @@ class LoopService:
 	# gathers input for volume and pan for each channel
 	def gatherInput(self):
 		while(True):
-		# for i in range(1000):
 			#get volume and pan for each loop channel
 			# for i in range(self.numberOfLoopChannels):
 				# volume_value = self.mcp.read_adc(i)

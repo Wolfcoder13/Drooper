@@ -10,13 +10,13 @@ import Adafruit_MCP3008
 
 
 # Software SPI configuration:
-CLK  = 18
-MISO = 23
-MOSI = 24
-CS   = 5
-CS2  = 6 
+CLK  = 18	# pin 12
+MISO = 23	# pin 16
+MOSI = 24	# pin 18
+CS   = 5 	# pin 29
+CS2  = 6 	# pin 31
 mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
-# mcp2 = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS2, miso=MISO, mosi=MOSI)
+mcp2 = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS2, miso=MISO, mosi=MOSI)
 
 # Hardware SPI configuration:
 # SPI_PORT   = 0
@@ -32,13 +32,13 @@ print('-' * 57)
 while True:
     # Read all the ADC channel values in a list.
     values = [0]*8
-    # values2 = [0]*8
+    values2 = [0]*8
     for i in range(8):
         # The read_adc function will get the value of the specified channel (0-7).
         values[i] = mcp.read_adc(i)
-        # values2[i] = mcp2.read_adc(i)
+        values2[i] = mcp2.read_adc(i)
     # Print the ADC values.
     print('TABLE1: | {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values))
-    # print('TABLE2: | {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values2))
+    print('TABLE2: | {0:>4} | {1:>4} | {2:>4} | {3:>4} | {4:>4} | {5:>4} | {6:>4} | {7:>4} |'.format(*values2))
     # Pause for half a second.
     time.sleep(0.01)

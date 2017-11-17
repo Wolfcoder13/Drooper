@@ -9,7 +9,8 @@ class MasterController:
 	
 	def __init__(self):
 		self.drumpadService = DrumpadService()
-		self.loopService = LoopService()
+		self.loopService    = LoopService()
+		self.displayLCD     = DisplayLCD()
 		
 		
 		# list containing strings of drums available
@@ -36,11 +37,13 @@ class MasterController:
 		self.initializeDrumList(self.DRUMPATH)
 		self.initializeSongList(self.SONGPATH)
 		self.initializeMenuList()
+		self.displayLCD.displayList("Menu", self.menuList, self.menuListIndex)
 		
-		self.BACK_BUTTON    = 1
-		self.SELECT_BUTTON  = 1
-		self.UP_BUTTON      = 1
-		self.DOWN_BUTTON    = 1
+		#VELJA NÚMER Á TÖKKUM
+		self.BACK_BUTTON    = 12
+		self.SELECT_BUTTON  = 16
+		self.UP_BUTTON      = 20
+		self.DOWN_BUTTON    = 21
 		self.initializeScreenButtons()
 		
 	def initializeDrumList(self, path):
@@ -133,10 +136,10 @@ class MasterController:
 	def runLoopService(self):
 		pass
 	
-#TODO	
+	
 def main():
 	controller = MasterController():
-	while True:
+	
 		
 		
 if __name__ == '__main__':main()
